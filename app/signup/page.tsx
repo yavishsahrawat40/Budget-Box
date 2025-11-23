@@ -1,69 +1,77 @@
 'use client'
-// app/page.tsx
+// app/signup/page.tsx
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter()
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ name, email, password })
       })
 
       const data = await response.json()
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Login failed')
+        throw new Error(data.error || 'Signup failed')
       }
 
-      // Store user in localStorage
-      localStorage.setItem('user', JSON.stringify(data.user))
-      
-      // Redirect to budget page
-      router.push('/budget')
+      // Redirect to login page
+      router.push('/')
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.')
+      setError(err.message || 'Signup failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const fillDemoCredentials = () => {
-    setEmail('hire-me@anshumat.org')
-    setPassword('HireMe@2025!')
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/30 rounded-full blur-[120px] animate-float" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/30 rounded-full blur-[120px] animate-float" style={{ animationDelay: '-3s' }} />
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/30 rounded-full blur-[120px] animate-float" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/30 rounded-full blur-[120px] animate-float" style={{ animationDelay: '-3s' }} />
       </div>
 
       <div className="max-w-md w-full glass-panel rounded-2xl p-8 relative z-10 border border-white/10">
         <div className="text-center mb-8">
           <div className="inline-block p-3 rounded-full bg-linear-to-tr from-blue-500 to-purple-500 mb-4 shadow-lg shadow-blue-500/30">
-            <span className="text-4xl">💰</span>
+            <span className="text-4xl">🚀</span>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">BudgetBox</h1>
-          <p className="text-gray-400 text-lg">Master Your Finances</p>
+          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Join BudgetBox</h1>
+          <p className="text-gray-400 text-lg">Start Your Financial Journey</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5">
+        <form onSubmit={handleSignup} className="space-y-5">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1.5">
+              Full Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 glass-input rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500"
+              placeholder="John Doe"
+              required
+            />
+          </div>
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">
               Email Address
@@ -111,42 +119,19 @@ export default function LoginPage() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Logging in...
+                Creating Account...
               </span>
-            ) : 'Sign In'}
+            ) : 'Create Account'}
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-gray-700/50">
-          <button
-            onClick={fillDemoCredentials}
-            className="w-full group relative overflow-hidden rounded-xl bg-gray-800/50 hover:bg-gray-800/80 transition-all duration-300 p-0.5 mb-4"
-          >
-            <div className="relative h-full bg-gray-900/90 rounded-[10px] py-3 px-4 transition-all group-hover:bg-gray-900/80">
-              <span className="block text-gray-300 font-medium text-sm">Use Demo Credentials</span>
-              <span className="block text-xs text-gray-500 mt-1 group-hover:text-blue-400 transition-colors">hire-me@anshumat.org</span>
-            </div>
-          </button>
-          
-          <div className="text-center">
-            <p className="text-gray-400 text-sm">
-              Don't have an account?{' '}
-              <Link href="/signup" className="text-blue-400 hover:text-blue-300 font-medium hover:underline transition-colors">
-                Sign Up
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-8 grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-lg bg-white/5 border border-white/5 text-center">
-            <span className="block text-xl mb-1">⚡</span>
-            <span className="text-xs text-gray-400">Offline First</span>
-          </div>
-          <div className="p-3 rounded-lg bg-white/5 border border-white/5 text-center">
-            <span className="block text-xl mb-1">🔒</span>
-            <span className="text-xs text-gray-400">Secure & Private</span>
-          </div>
+        <div className="mt-8 pt-6 border-t border-gray-700/50 text-center">
+          <p className="text-gray-400">
+            Already have an account?{' '}
+            <Link href="/" className="text-blue-400 hover:text-blue-300 font-medium hover:underline transition-colors">
+              Sign In
+            </Link>
+          </p>
         </div>
       </div>
     </div>
