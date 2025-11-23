@@ -35,7 +35,7 @@ A modern, offline-first budget tracking application built with Next.js 16, featu
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/yavishsahrawat40/Budget-Box.git
    cd budget-box
    ```
 
